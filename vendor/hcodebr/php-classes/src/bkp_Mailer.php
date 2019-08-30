@@ -6,8 +6,8 @@ use Rain\Tpl;
 
 class Mailer {
 
-	const USERNAME = "camilo.uessugui@gmail.com";
-	const PASSWORD = "bananuda";
+	const USERNAME = "lu.uessugui@gmail.com";
+	const PASSWORD = "jackrabbitslims";
 	const NAME_FROM = "Hcode Store";
 
 	private $mail;
@@ -23,7 +23,7 @@ class Mailer {
 
 		Tpl::configure( $config );
 
-		$tpl = new Tpl;
+		$this->tpl = new Tpl;
 
 		foreach ($data as $key => $value) {
 			$tpl->assign($key, $value);
@@ -31,14 +31,16 @@ class Mailer {
 
 		$html = $tpl->draw($tplName, true);
 
-		$this->mail = new \PHPMailer;
+		$this->$this->mail = new \PHPMailer;
 
 		//Tell PHPMailer to use SMTP
 		$this->mail->isSMTP();
 
+		//Enable SMTP debugging
+		// 0 = off (for production use)
+		// 1 = client messages
+		// 2 = client and server messages
 		$this->mail->SMTPDebug = 0;
-
-		$this->mail->Debugoutput = 'html';
 
 		//Set the hostname of the mail server
 		$this->mail->Host = 'smtp.gmail.com';
@@ -67,18 +69,26 @@ class Mailer {
 		//Set an alternative reply-to address
 		//$this->mail->addReplyTo('replyto@example.com', 'First Last');
 
-
 		//Set who the message is to be sent to
 		$this->mail->addAddress($toAddress, $toName);
 
+		//Set the subject line
 		$this->mail->Subject = $subject;
 
+		//Read an HTML message body from an external file, convert referenced images to embedded,
+		//convert HTML into a basic plain-text alternative body
 		$this->mail->msgHTML($html);
 
 		//Replace the plain text body with one created manually
 		$this->mail->AltBody = 'This is a plain-text message body';
 
+		//Attach an image file
+		//$this->mail->addAttachment('images/phpmailer_mini.png');
+
+
 	}
+
+
 
 
 	public function send()
@@ -86,7 +96,7 @@ class Mailer {
 
 		return $this->mail->send();
 
-	}
+	};
 
 }
 
